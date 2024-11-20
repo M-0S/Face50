@@ -1,0 +1,7 @@
+cs50
+fast_colorthief
+filetype
+Flask
+Flask-Session
+pytz
+requests
