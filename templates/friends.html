@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="card p-0 text-center mx-auto shadow-sm rounded-3 bg-light-subtle" id="card" style="width: 400px;">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <button class="nav-link text-body border-bottom-0" id="friends" onclick="switchTabs(this);">Friends</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-body border-bottom-0" id="requests" onclick="switchTabs(this);">Requests</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-body border-bottom-0" id="sent" onclick="switchTabs(this);">Sent</button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body pb-0">
+
+            <div class="d-none" id="friendsContent">
+                <h5 class="card-title mb-3">
+                    <span class="fw-bold">{{ friends|length }}</span> Friend{{'s' if friends|length != 1}}
+                </h5>
+
+                {% for user in friends %}
+                    <div class="d-flex position-absolute end-0 me-3" style="z-index: 1;">
+                        <button type="button" title="Unfriend" class="btn btn-sm btn-outline-danger rounded-2" onclick="this.classList.add('disabled'); unfriend({{ user.id }});"><i class="bi bi-person-dash-fill"></i></button>
+                    </div>
+                    {% include "layout_users.html" %}
+                    <div class="mb-3"></div>
+                {% endfor %}
+            </div>
+
+
+            <div class="d-none" id="requestsContent">
+                <h5 class="card-title mb-3">
+                    <span class="fw-bold">{{ requests|length }}</span> Request{{'s' if requests|length != 1}}
+                </h5>
+
+                {% for user in requests %}
+                    <div class="d-flex position-absolute end-0 me-3" style="z-index: 1;">
+                        <button type="button" title="Remove" class="btn btn-sm btn-outline-secondary rounded-2" onclick="this.classList.add('disabled'); remove_request({{ user.id }});"><i class="bi bi-person-x-fill"></i></button>
+                        <button type="button" title="Accept" class="btn btn-sm btn-primary rounded-2 ms-1" onclick="this.classList.add('disabled'); accept_friend({{ user.id }});"><i class="bi bi-person-check-fill"></i></button>
+                    </div>
+                    {% include "layout_users.html" %}
+                    <div class="mb-3"></div>
+                {% endfor %}
+            </div>
+
+            <div class="d-none" id="sentContent">
+                <h5 class="card-title mb-3">
+                    <span class="fw-bold">{{ sent|length }}</span> Sent
+                </h5>
+
+                {% for user in sent %}
+                    <div class="d-flex position-absolute end-0 me-3" style="z-index: 1;">
+                        <button type="button" title="Cancel" class="btn btn-sm btn-outline-secondary rounded-2" onclick="this.classList.add('disabled'); cancel_request({{ user.id }});"><i class="bi bi-person-x-fill"></i></button>
+                    </div>
+                    {% include "layout_users.html" %}
+                    <div class="mb-3"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/static/js/friends_page.js"></script>
+    <script src="/static/js/friend_functions.js"></script>
+{% endblock %}

@@ -1,0 +1,25 @@
+<!-- Delete a post Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered border-0">
+        <div class="modal-content border-0">
+            <div class="d-flex mt-3">
+                <h1 class="modal-title fs-5 mx-auto ps-4" id="deleteModalLabel">Delete this post?</h1>
+                <button type="button" class="btn-close me-3 mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <hr class="mb-0">
+            <div class="modal-body pt-2">
+                After you delete this post, it can not be restored.
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-outline-secondary fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                    <form action="/delete_post" method="post">
+                        <input id="hiddenInput" name="post_id" value="" type="hidden"></input>
+                        <button class="btn btn-danger fw-semibold ms-2" style="width: 100px;" type="submit"
+                        onclick="this.classList.add('disabled'); this.innerHTML+='ing...';">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/modal_delete.js"></script>

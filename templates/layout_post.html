@@ -1,0 +1,96 @@
+<div class="card mx-auto text-start border rounded-3 p-0 mb-3 bg-body-tertiary shadow-sm" style="max-width: 680px;">
+    <div class="px-0">
+        <div class="d-flex pt-2 ps-3">
+            <a href="/profile?id={{ post.user_id }}" class="text-body pe-2">
+                <!-- I could have used post.user_id|has_picture only but I added these lines to prevent repeated calls to SQL db for the same user. -->
+                <!-- checked_pfps is defined in home, search and profile HTML pages. -->
+                {% set pfp_img = false %}
+                {% if checked_pfps is defined %}
+                    {% if not post.user_id in checked_pfps %}
+                        <!-- https://stackoverflow.com/a/58228179 -->
+                        {%- set _ = checked_pfps.update({post.user_id: post.user_id|has_picture}) -%}
+                    {% endif %}
+                    {% if checked_pfps.get(post.user_id) == true %}{% set pfp_img = true %}{% endif %}
+                {% else %}
+                    {% if post.user_id|has_picture %}{% set pfp_img = true %}{% endif %}
+                {% endif %}
+
+                {% if pfp_img %}
+                    <img src="/static/images/profile/picture/{{ post.user_id }}.png" class="rounded-circle border" style="height: 45px; width: 45px; object-fit: fill;" loading="lazy">
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-person-circle rounded-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                    </svg>
+                {% endif %}
+            </a>
+            <h6 class="text-body">
+                <a href="/profile?id={{ post.user_id }}" class="text-body">{{ post.username }}</a>
+                <br />
+                <span class="text-muted" style="font-size: 13px;" id="date{{ post.id }}">
+                    <script>document.getElementById('date{{ post.id }}').innerHTML = moment(new Date('{{ post.datetime }}')).fromNow();</script>
+                </span>
+            </h6>
+            <div class="dropdown position-absolute end-0 pe-3">
+                <button type="button" id="moreButton" class="btn btn-link rounded-circle text-body"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi text-body text-muted fs-5 bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu shadow-sm" style="min-width: unset;">
+                    {% if request.path != '/posts' %}
+                        <li><a class="btn dropdown-item" href="/posts?id={{ post.id }}">
+                            <i class="bi bi-arrows-angle-expand pe-2"></i>Expand
+                        </a></li>
+                    {% endif %}
+                    <li><button class="btn dropdown-item" onclick="navigator.clipboard.writeText('{{ post.content }}');">
+                        <i class="bi bi-copy pe-2"></i>Copy
+                    </button></li>
+                    {% if post.user_id == session.user_id %}
+                        <li><hr class="dropdown-divider"></li>
+
+                        <!-- Button trigger modal -->
+                        <li><button class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteModal" style="color: var(--bs-danger); cursor: pointer;"
+                        data-bs-id="{{ post.id }}" data-bs-date="{{ post.date }}" data-bs-content="{{ post.content }}" {{ "data-bs-hasimage=true" if post.has_image }}>
+                            <i class="bi bi-file-earmark-x pe-2"></i>Delete
+                        </button></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <p class="ps-4 pt-2 pe-3 mb-2" style="line-height: 1.2;">
+            {% for word in post.content.split() %}
+                {% if word.startswith("#") %}
+                    <a href="/search?q=%23{{ word.strip('#') }}&type=posts">{{ word }}</a>
+                {% else %}
+                    {{ word }}
+                {% endif %}
+            {% endfor %}
+        </p>
+        {% if post.has_image %}
+            <div class="card border-0 mb-3" style="max-width: 680px;">
+                <a href="./static/images/posts/{{ post.id }}.png" data-fslightbox="{{ post.id }}">
+                    <img id="img{{ post.id }}" src="./static/images/posts/{{ post.id }}.png" class="card-img-bottom img-fluid rounded-0"
+                    style="max-width: 680px; max-height: 750px; object-fit: contain; background-color: rgb({{ './static/images/posts/{}.png'.format(post.id)|common_color|join(' ') }})" loading="lazy">
+                </a>
+            </div>
+        {% endif %}
+        <div class="d-flex justify-content-between">
+        <button type="button" class="btn text-body pt-0 pb-2 ps-4 border-0" data-bs-postId="{{ post.id }}" onclick="like(this);">
+            <i class="bi bi-hand-thumbs-up{{ '-fill' if session.user_id in post.likes|jsonify }} ps-1 pe-1"></i><small>{{ post.likes_count }}</small>
+        </button>
+        <form action="/repost" method="post">
+            <input name="post_id" value="{{ post.id }}" type="hidden"></input>
+            <button type="submit" class="btn text-body pt-0 pb-2 ms-2 border-0"
+            onclick="this.classList.add('disabled'); this.innerHTML=this.innerHTML.trim()+'<small>ing...</small>';">
+                <i class="bi bi-arrow-repeat pe-1"></i><small>Repost</small>
+            </button>
+        </form>
+        <button type="button" class="btn text-body pt-0 pb-2 pe-4 me-2 border-0"
+        onclick="navigator.clipboard.writeText(document.location.origin + '/posts?id={{ post.id }}');"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Link copied to clipboard!" data-bs-trigger="click">
+            <i class="bi bi-share pe-2"></i><small>Share</small>
+        </button>
+        </div>
+    </div>
+</div>
+

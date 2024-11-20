@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <h1 class="display-5 text-primary text-center fw-bold mb-3">Face<span class="text-danger">50</span></h1>
+    <div class="card rounded-3 border-light-subtle text-center mx-auto shadow bg-light-subtle" style="max-width: 390px; height: 390px;">
+        <div class="card-header bg-transparent border-light-subtle">
+            <h4 class="m-0">Create a new account</h4>
+            <span class="text-muted">It's quick and easy.</span>
+        </div>
+        <div class="card-body">
+            <form action="/register" method="post">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto focus-ring bg-body-tertiary" id="username" name="username" placeholder="Username" type="text" maxlength=20 required style="height: 50px;">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control mx-auto focus-ring bg-body-tertiary" id="password" name="password" placeholder="Password" type="password" maxlength=20 required style="height: 50px;">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control mx-auto focus-ring bg-body-tertiary" id="confirmation" name="confirmation" placeholder="Confirm Password" type="password" maxlength=20 required style="height: 50px;">
+                </div>
+                <div class="mb-3 d-grid gap-2">
+                    <button class="btn btn-green fw-bold" id="submitBtn" type="submit" style="height: 50px;" onclick="validateRegister(true);">Sign Up</button>
+                </div>
+            </form>
+            <a href="/login">
+                <span class="mb-3 text-primary">
+                    Already have an account?
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <script src="/static/js/validate_register.js"></script>
+{% endblock %}

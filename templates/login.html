@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <h1 class="display-5 text-primary text-center fw-bold mb-3">Face<span class="text-danger">50</span></h1>
+    <div class="card rounded-3 border-light-subtle text-center mx-auto shadow bg-light-subtle" style="max-width: 390px; height: 390px;">
+        <div class="card-body">
+            <p class="fs-5">Log in to Face50</p>
+            <form action="/login" method="post">
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto focus-ring bg-body-tertiary" name="username" placeholder="Username" type="text" required style="height: 50px;">
+                </div>
+                <div class="mb-3">
+                    <input class="form-control mx-auto focus-ring bg-body-tertiary" name="password" placeholder="Password" type="password" required style="height: 50px;">
+                </div>
+                <div class="mb-3 d-grid gap-2">
+                    <button class="btn btn-primary fw-bold" type="submit" style="height: 50px;" onclick="login(this);">Log in</button>
+                </div>
+            </form>
+            <a href="/recover"><span class="text-primary mb-3" style="font-size: 15px;">Forgetten password?</span></a>
+            <hr class="mb-3 text-muted">
+            <a href="/register">
+                <button class="btn btn-green fw-bold" style="height: 50px;">Create new account</button>
+            </a>
+        </div>
+    </div>
+    <script>
+        function login(button) {
+            if (document.getElementsByName("username")[0].value && document.getElementsByName("password")[0].value) {
+                button.classList.add('disabled');
+                button.innerHTML='Logging in...';
+            }
+        }
+    </script>
+{% endblock %}

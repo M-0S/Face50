@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block main %}
+<form action="/settings_profile" id="profileForm" enctype="multipart/form-data" method="post"></form>
+<form action="/settings_remove/picture" id="removePicture" method="post"></form>
+<form action="/settings_remove/cover" id="removeCover" method="post"></form>
+<form action="/settings_password" id="passwordForm" method="post"></form>
+<div class="row">
+    <div class="card p-0 rounded-3 border-light-subtle text-center mx-auto shadow bg-light-subtle" style="max-width: 650px; height: 860px;">
+        <div class="card-header fw-bold fs-4">
+            Settings
+        </div>
+        <div class="card-body" style="overflow-y: auto;">
+            <h4 class="mb-1">Profile</h4>
+            <div class="text-start mb-1">
+                <span class="fw-semibold fs-5">Images</span>
+            </div>
+            <div class="d-flex" style="height: 150px;">
+                <img src="/static/images/profile/picture/{{ '{}.png'.format(user.id) if user.has_picture else '_default.svg' }}" class="img-fluid img-thumbnail bg-body-tertiary h-100 me-1" style="width: 150px; object-fit: fill;" loading="lazy">
+                <div class="rounded cover w-100 h-100 border border-secondary-subtle border-5" style="{% if user.has_cover %}--image:url('/static/images/profile/cover/{{ user.id }}.png'){% endif %}"></div>
+            </div>
+            <div class="d-flex mt-2" style="height: 38px;">
+                <span class="fw-semibold fs-6 me-1 my-1">Picture:</span>
+                <div class="mb-3 input-group me-1">
+                    <input class="form-control focus-ring" form="profileForm" type="file" name="profilePicture" aria-describedby="clearBtn" aria-label="Upload" accept="image/*">
+                    <button type="button" class="btn btn-outline-secondary" id="clearBtn" aria-label="Clear" onclick="previousElementSibling.value='';"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <button form="removePicture" class="btn btn-outline-danger fw-bold" type="submit" onclick="this.classList.add('disabled'); this.innerHTML='Removing...';">Remove</button>
+            </div>
+            <div class="d-flex mt-1" style="height: 38px;">
+                <span class="fw-semibold fs-6 my-1" style="margin-right: 12px;">Cover:</span>
+                <div class="mb-3 input-group me-1">
+                    <input class="form-control focus-ring" form="profileForm" type="file" name="profileCover" aria-describedby="clearBtn" aria-label="Upload" accept="image/*">
+                    <button type="button" class="btn btn-outline-secondary" id="clearBtn" aria-label="Clear" onclick="previousElementSibling.value='';"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <button form="removeCover" class="btn btn-outline-danger fw-bold" type="submit" onclick="this.classList.add('disabled'); this.innerHTML='Removing...';">Remove</button>
+            </div>
+
+            <div class="text-start mt-3 mb-1">
+                <span class="fw-semibold fs-5">About</span>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control mx-auto focus-ring bg-body-tertiary" form="profileForm" name="about" placeholder="About..." type="text" style="height: 50px;">{{ user.about if user.about }}</textarea>
+            </div>
+
+            <div class="d-grid gap-2 mb-4">
+                <button class="btn btn-success fw-bold" form="profileForm" type="submit" onclick="this.classList.add('disabled'); this.innerHTML='Saving...';">Save</button>
+            </div>
+            <hr>
+            <h4>Password</h4>
+            <div class="mb-3">
+                <input class="form-control mx-auto focus-ring bg-body-tertiary" form="passwordForm" name="current_password" placeholder="Current Password" type="password" style="height: 50px;" required>
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto focus-ring bg-body-tertiary" form="passwordForm" id="new_password" name="new_password" placeholder="New Password" type="password" maxlength=20 style="height: 50px;" required>
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto focus-ring bg-body-tertiary" form="passwordForm" id="confirm_password" name="confirm_password" placeholder="Confirm Password" type="password" maxlength=20 style="height: 50px;" required>
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-secondary fw-bold" form="passwordForm" id="updateBtn" type="submit" onclick="validatePassword(true);">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/settings_password.js"></script>
+{% endblock %}

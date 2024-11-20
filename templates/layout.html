@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+        <!-- http://getbootstrap.com/docs/5.3/ -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+        <!-- https://stackoverflow.com/a/69634626 -->
+        <script>
+            moment.updateLocale("en", {
+                relativeTime: {
+                    past: (diff) => (diff == "Just now" ? diff : `${diff} ago`),
+                    s: "Just now"
+                }
+            });
+        </script>
+
+        <!-- https://favicon.io/emoji-favicons/globe-with-meridians/ -->
+        <link href="/static/images/icon/favicon.ico" rel="icon">
+
+        <script src="/static/js/toggle_themes.js"></script>
+
+        <link href="/static/css/styles.css" rel="stylesheet">
+
+        <title>Face50: {% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm sticky-top focus-ring" style="min-width: 320px;">
+            <div class="container-fluid focus-ring">
+              <a class="navbar-brand fs-4" href="/"><span class="text-primary">Face</span><span class="text-danger">50</span></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if session["user_id"] %}
+                <ul class="navbar-nav me-auto mb-lg-0">
+                    <li class="nav-item">
+                        <form class="d-flex me-auto mb-lg-0" role="search" action="/search">
+                            <input class="form-control me-2 rounded-3 focus-ring" name="q" type="search" placeholder="Search" aria-label="Search" required>
+                            <button class="btn btn-sm btn-outline-primary rounded-2" type="submit">Search</button>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="navbar-nav nav-underline mb-lg-0 d-flex" style="margin-right: 5vw;">
+                    <li class="nav-item"><a id="/" class="nav-link {{ 'active text-primary' if request.path == '/' }}" href="/"><i class="bi bi-house-door{{ '-fill' if request.path == '/' }} pe-1"></i>Home</a></li>
+                    <li class="nav-item"><a id="/profile" class="nav-link {{ 'active text-primary' if request.path == '/profile' }}" href="/profile?id={{ session.user_id }}"><i class="bi bi-person{{ '-fill' if request.path == '/profile' }} pe-1"></i>Profile</a></li>
+                    <li class="nav-item"><a id="/friends" class="nav-link {{ 'active text-primary' if request.path == '/friends' }}" href="/friends"><i class="bi bi-people{{ '-fill' if request.path == '/friends' }} pe-1"></i>Friends</a></li>
+                    <li class="nav-item"><a id="/settings" class="nav-link {{ 'active text-primary' if request.path == '/settings' }}" href="/settings"><i class="bi bi-gear{{ '-fill' if request.path == '/settings' }} pe-1"></i>Settings</a></li>
+                </ul>
+                <ul class="navbar-nav mb-lg-0 ms-auto">
+                    <li class="nav-item"><div class="dropdown">
+                        <button type="button" id="themeButton" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="btn btn-link d-flex align-items-center nav-link rounded-circle dropdown-toggle text-body-tertiary" style="padding-top: 10px;">
+                            <i class="bi bi-circle-half"></i>
+                        </button>
+                        <ul class="mode-switch dropdown-menu dropdown-menu-end shadow-sm pt-1 pb-1" style="min-width: 130px;">
+                            <li><button id="light" class="btn btn-primary dropdown-item">
+                                <i class="bi bi-sun-fill text-body-tertiary"></i><span class="ps-2">Light</span>
+                            </button></li>
+                            <li><button id="dark" class="btn btn-primary dropdown-item">
+                                <i class="bi bi-moon-fill text-body-tertiary"></i><span class="ps-2">Dark</span>
+                            </button></li>
+                            <li><button id="system" class="btn btn-primary dropdown-item">
+                                <i class="bi bi-circle-half text-body-tertiary"></i><span class="ps-2">Auto</span>
+                            </button></li>
+                        </ul>
+                    </div></li>
+                    <li class="nav-item py-2 py-lg-1 col-12 col-lg-auto">
+                        <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-body"></div>
+                        <hr class="d-lg-none my-2 text-body-50">
+                    </li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="/profile?id={{ session.user_id }}">
+                        {% if session.user_id|has_picture %}
+                            <img class="border border-secondary-subtle rounded-circle" style="width: 30px; height: 30px; object-fit: fill;" src="/static/images/profile/picture/{{ session.user_id }}.png" loading="lazy">
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle rounded-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                            </svg>
+                        {% endif %}
+                        <span>{{ session["user_name"] }}</span>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                </ul>
+                {% else %}
+                    <ul class="navbar-nav mb-lg-0 ms-auto">
+                        <li class="nav-item"><div class="dropdown">
+                            <button type="button" id="themeButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            class="btn btn-link d-flex align-items-center nav-link rounded-circle dropdown-toggle text-body-tertiary" style="padding-top: 10px;">
+                                <i class="bi bi-circle-half"></i>
+                            </button>
+                            <ul class="mode-switch dropdown-menu dropdown-menu-end shadow-sm pt-1 pb-1" style="min-width: 130px;">
+                                <li><button id="light" class="btn btn-primary dropdown-item">
+                                    <i class="bi bi-sun-fill text-body-tertiary"></i><span class="ps-2">Light</span>
+                                </button></li>
+                                <li><button id="dark" class="btn btn-primary dropdown-item">
+                                    <i class="bi bi-moon-fill text-body-tertiary"></i><span class="ps-2">Dark</span>
+                                </button></li>
+                                <li><button id="system" class="btn btn-primary dropdown-item">
+                                    <i class="bi bi-circle-half text-body-tertiary"></i><span class="ps-2">Auto</span>
+                                </button></li>
+                            </ul>
+                        </div></li>
+                        <li class="nav-item py-2 py-lg-1 col-12 col-lg-auto">
+                            <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-body"></div>
+                            <hr class="d-lg-none my-2 text-body-50">
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                    </ul>
+                {% endif %}
+              </div>
+            </div>
+          </nav>
+        {% if get_flashed_messages() %}
+            <div class="toast-container animate position-fixed p-3 bottom-0 end-0" id="toastPlacement" data-original-class="toast-container position-fixed p-3">
+                {% for toast_message in get_flashed_messages() %}
+                    <div class="toast animate border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" data-bs-autohide="false">
+                        <div class="d-flex">
+                            <div class="toast-body fw-semibold">
+                                <i class="bi bi-check-circle-fill text-primary"></i>
+                                <span class="fw-normal ps-1">{{ toast_message }}</span>
+                            </div>
+                            <button type="button" class="btn-close btn-close-sm ms-auto me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="progress" style="height: 2px;">
+                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <script src="/static/js/toast_message.js"></script>
+        {% endif %}
+        <main class="container py-3 text-center" style="min-width: 320px;">
+                {% include "layout_post_modal.html" %}
+                {% include "layout_delete_modal.html" %}
+                {% block main %}{% endblock %}
+        </main>
+
+        <script src="/static/js/tooltips.js"></script>
+        <script src="/static/js/post_like.js"></script>
+
+        <!-- https://fslightbox.com/javascript -->
+        <script src="https://cdn.jsdelivr.net/npm/fslightbox@3.4.2/index.min.js"></script>
+    </body>
+</html>

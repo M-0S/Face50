@@ -1,0 +1,32 @@
+<div class="card bg-body-tertiary" style="height: 64px;">
+    <div class="row g-0">
+      <div class="col-md-4 text-start" style="width: 64px; height: 64px;">
+        <a href="/profile?id={{ user.id }}" class="text-body">
+            {% if user.has_picture %}
+                <img src="/static/images/profile/picture/{{ user.id }}.png" class="img-fluid rounded-start-1 border-end border-secondary-subtle w-100" style="height: 97%; object-fit: fill;" loading="lazy">
+            {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="97%" height="97%" fill="currentColor" class="bi bi-person-fill border-end border-secondary-subtle" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                </svg>
+            {% endif %}
+        </a>
+      </div>
+      <div class="col" style="height: 64px;">
+        <div class="card-body pt-2" style="height: 64px;">
+            <h5 class="text-start row">
+                <!-- https://stackoverflow.com/a/40530033 -->
+                <div class="d-flex">
+                    <a href="/profile?id={{ user.id }}" class="d-inline-flex" style="font-size: clamp(17px, 5vw, 20px); padding-bottom: 2px;">{{ user.username }}</a>
+                </div>
+                <!-- <small style="font-size: 13px;"> -->
+                <!-- <small style="font-size: calc(11px + .11vw);"> -->
+                <small style="font-size: clamp(11px, 3.2vw, 12.5px)">
+                    {% if user.about %}
+                        {{ user.about[:44] + '...' if user.about|length > 44 else user.about }}
+                    {% endif %}
+                </small>
+            </h5>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<!-- Make a post Modal -->
+<div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="d-flex mt-3">
+                <h1 class="modal-title fs-5 mx-auto ps-4" id="postModalLabel">Make a post</h1>
+                <button type="button" class="btn-close me-3 mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <hr class="mb-0">
+            <div class="modal-body pt-3">
+                <form id="postForm" action="/post" enctype="multipart/form-data" method="post">
+                    <div class="mb-3">
+                        <textarea autocomplete="off" class="form-control focus-ring" name="content" placeholder="Write something..." type="text"></textarea>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <input class="form-control focus-ring" type="file" id="postImage" name="postImage" aria-describedby="closeModal" aria-label="Upload" accept="image/*">
+                        <button type="button" class="btn btn-outline-secondary" id="closeModal" aria-label="Clear"
+                        onclick="previousElementSibling.value='';"><i class="bi bi-x-lg"></i></button>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary fw-semibold" type="submit">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/modal_post.js"></script>

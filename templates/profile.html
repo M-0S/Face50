@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+<!-- Adapted from https://mdbootstrap.com/docs/standard/extended/profiles/#section-6 -->
+    <div class="row justify-content-center">
+        <div class="col col-lg-9 col-xl-8 p-0">
+            <div class="card shadow-sm rounded-3 bg-body-tertiary">
+                <div class="rounded-top text-white d-flex flex-row cover" {% if user.has_cover %}style="--image:url('/static/images/profile/cover/{{ user.id }}.png')"{% endif %} loading="lazy">
+                    {% if user.has_cover %}<a href="/static/images/profile/cover/{{ user.id }}.png" class="w-100 position-absolute" style="height: 200px;" data-fslightbox="cover"></a>{% endif %}
+                    <div class="ms-4 mt-5 d-flex flex-column">
+                        <div class="mt-4 mb-2" style="z-index: 1;">
+                            {% if user.has_picture %}
+                                <a href="/static/images/profile/picture/{{ user.id }}.png" data-fslightbox="pfp">
+                                    <img src="/static/images/profile/picture/{{ user.id }}.png" class="img-fluid img-thumbnail bg-body-tertiary" style="width: 150px; height: 150px; object-fit: fill;" loading="lazy">
+                                </a>
+                            {% else %}
+                                <img src="/static/images/profile/picture/_default.svg" class="img-fluid img-thumbnail bg-body-tertiary" style="width: 150px; height: 150px;" loading="lazy">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="p-2 text-black bg-body-secondary">
+                        <div class="d-flex text-body">
+                            <div class="d-flex me-auto pt-3">
+                                <h4 class="my-auto fw-bold" style="margin-inline-start: 35px; z-index: 1;">{{ user.username }}</h4>
+                            </div>
+                            {% if user.id == session.user_id %}
+                                <div class="my-auto">
+                                    <a type="button" class="btn btn-secondary" href="/settings">
+                                        Edit Profile
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="my-auto" id="buttonsContainer">
+                                    <button type="button" id="friend" class="btn btn-primary d-none" onclick="friend_request({{ user.id }});">
+                                        <i class="bi bi-person-plus-fill pe-1"></i>Add Friend
+                                    </button>
+
+                                    <button type="button" id="cancel" class="btn btn-outline-secondary d-none" onclick="cancel_request({{ user.id }});">
+                                        <i class="bi bi-person-x-fill pe-1"></i>Cancel
+                                    </button>
+
+                                    <div class="d-flex d-none" id="accept-remove">
+                                        <button type="button" class="btn btn-outline-secondary me-1" onclick="remove_request({{ user.id }});">
+                                            <i class="bi bi-person-x-fill pe-1"></i>Remove
+                                        </button>
+                                        <button type="button" class="btn btn-primary ps-3 pe-3" onclick="accept_friend({{ user.id }});">
+                                            <i class="bi bi-person-check-fill pe-1"></i>Accept
+                                        </button>
+                                    </div>
+
+                                    <button type="button" id="unfriend" class="btn btn-outline-danger d-none" onclick="unfriend({{ user.id }});">
+                                        <i class="bi bi-person-dash-fill pe-1"></i>Unfriend
+                                    </button>
+                                </div>
+                            {% endif %}
+                            <div class="px-3">
+                                <p class="mb-1 h5">{{ posts|length }}</p>
+                                <p class="small text-muted mb-0">Posts</p>
+                            </div>
+                            <div class="pe-3">
+                                <p class="mb-1 h5" id="friendsCount">{{ user.friends|jsonify|length }}</p>
+                                <p class="small text-muted mb-0">Friends</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-body p-4 pt-3">
+                    <div class="mb-4 text-body">
+                        <p class="lead fw-normal mb-1 text-start">About</p>
+                        <div class="p-4 bg-body-secondary rounded">
+                            {% if user.about %}
+                                <p class="mb-1 text-start">{{ user.about }}</p>
+                            {% else %}
+                                <p class="mb-1 text-muted">Nothing.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="text-body">
+                        <div class="d-flex justify-content-between mb-1 text-body">
+                            <p class="lead fw-normal mb-0">Recent posts</p>
+                            {% if user.id == session.user_id %}
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-link p-0 text-muted" data-bs-toggle="modal" data-bs-target="#postModal" style="text-decoration: none;">
+                                    <i class="bi bi-sticky-fill"></i> Make a post
+                                </button>
+                            {% endif %}
+                        </div>
+
+                        <div class="p-3 pt-4 pb-2 bg-body-secondary rounded text-start">
+                            {% if not posts %}
+                                <p class="mb-3 text-center text-muted">No recent posts.</p>
+                            {% else %}
+                                {% set checked_pfps = {} %}
+                                {% for post in posts %}
+                                        {% include "layout_post.html" %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        {% if user.id != session.user_id %}
+            {% if session.user_id in user.friends|jsonify %}
+                document.getElementById('unfriend').classList.remove('d-none');
+            {% elif session.user_id in user.requests|jsonify %}
+                document.getElementById('cancel').classList.remove('d-none');
+            {% elif session.user_id in user.sent|jsonify %}
+                document.getElementById('accept-remove').classList.remove('d-none');
+            {% else %}
+                document.getElementById('friend').classList.remove('d-none');
+            {% endif %}
+        {% endif %}
+    </script>
+    <script src="/static/js/friend_functions.js"></script>
+{% endblock %}

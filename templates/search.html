@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="card p-0 text-center mx-auto shadow-sm rounded-3 bg-light-subtle" id="card" style="width: 400px;">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <button class="nav-link text-body border-bottom-0" id="users" onclick="switchTabs(this);">Users</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link text-body border-bottom-0" id="posts" onclick="switchTabs(this);">Posts</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body pb-0">
+                <div class="d-none" id="usersContent">
+                    <h5 class="card-title mb-3">
+                        <span class="fw-bold">{{ users|length }}</span> Result{{ 's' if users|length != 1 }} found for "<span class="fw-bold">{{ request.args.get("q")|trim }}</span>"
+                    </h5>
+
+                    {% for user in users %}
+                        {% include "layout_users.html" %}
+                        <div class="mb-3"></div>
+                    {% endfor %}
+                </div>
+
+                <div class="d-none" id="postsContent">
+                    <h5 class="card-title mb-3">
+                        <span class="fw-bold">{{ posts|length }}</span> Result{{ 's' if posts|length != 1 }} found for "<span class="fw-bold">{{ request.args.get("q")|trim }}</span>"
+                    </h5>
+
+                    {% set checked_pfps = {} %}
+                    {% for post in posts %}
+                        {% include "layout_post.html" %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/search.js"></script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="card border bg-body-tertiary shadow-sm rounded-3 mx-auto p-0 mb-3" style="width: 680px;">
+        <div class="card-body">
+            <div class="d-flex">
+                <a href="/profile?id={{ session.user_id }}" class="text-body">
+                    {% if session.user_id|has_picture %}
+                        <img src="/static/images/profile/picture/{{ session.user_id }}.png" class="border rounded-circle" style="width: 50px; height: 50px; object-fit: fill;" loading="lazy">
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle rounded-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                        </svg>
+                    {% endif %}
+                </a>
+                <div class="d-flex align-items-center w-100 ps-3">
+                    <div class="w-100">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn rounded-pill py-2 w-100 text-start bg-body-secondary" data-bs-toggle="modal" data-bs-target="#postModal">
+                            <span class="text-muted" id="testMoment">What's going on, {{ session["user_name"] }}?</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    {% if not posts %}
+        <h6>Be the first to make a post!</h6>
+    {% else %}
+        {% set checked_pfps = {} %}
+        {% for post in posts %}
+            <div class="row">
+                {% include "layout_post.html" %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
