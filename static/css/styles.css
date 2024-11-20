@@ -1,0 +1,66 @@
+a {
+    text-decoration: none;
+}
+
+
+.btn-green {
+    --bs-btn-padding-y: 4px;
+    --bs-btn-color: white;
+    --bs-btn-bg: #42b62a;
+    --bs-btn-border-color: #42b62a;
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: #3ba426;
+    --bs-btn-hover-border-color: #3ba426;
+    --bs-btn-disabled-color: white;
+    --bs-btn-disabled-bg: #3ba426;
+    --bs-btn-disabled-border-color: #3ba426;
+    --bs-btn-active-color: white;
+    --bs-btn-active-bg: #359222;
+    --bs-btn-active-border-color: #359222;
+}
+
+.btn-small {
+    --bs-btn-padding-x: 8px;
+    --bs-btn-font-size: 12px;
+}
+
+
+/* https://github.com/twbs/bootstrap/issues/36064 */
+/* Display Toast from Side */
+.toast-container.animate {
+    overflow: hidden;
+}
+
+.toast {
+    overflow: hidden;
+}
+
+.toast.animate {
+    transform: translateX(0);
+    opacity: 1 !IMPORTANT;
+}
+
+.toast.animate:not(.show) {
+    display: block;
+    transform: translateX(calc(100% + 20px));
+    transition: transform ease-out 0.3s;
+}
+
+
+.focus-ring {
+    --bs-focus-ring-width: 1px;
+}
+
+
+.cover {
+    background-color: #c1c7c9;
+    height: 200px;
+    background-image: var(--image);
+    background-size: cover;
+    background-repeat: no-repeat
+}
+
+
+body {
+    overflow-x: hidden;
+}
