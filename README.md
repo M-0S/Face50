@@ -11,7 +11,7 @@
 </div>
 
 # Description
-A website like FaceBook but with my own personal touch! I created this website without taking any courses other than CS50x, however, I had to do a lot of Google and Stackoverflow searching. I didn't use any AI tools to create this project or its documentation though.
+A social media site like FaceBook but with my own personal touch! I created this website without taking any courses other than CS50x, however, I had to do a lot of Google and Stackoverflow searching. I didn't use any AI tools to create this project or its documentation though.
 # Support
 If you want to help me through my learning journey and help me get a better PC, then you can via [PayPal](https://www.paypal.com/paypalme/gerodev).
 # Features
