@@ -38,3 +38,5 @@ A social media site like FaceBook but with my own personal touch! I created this
 - Settings page to customize your profile and update your password.
 - Handled many bad use cases and errors, and implemented some security practices from week 10.
 - And a lot more...
+# Certificate
+Link to my CS50x 2024 [certificate](https://cs50.harvard.edu/certificates/f035d773-caf5-413e-8d9c-62b0fc6fbfc3)
